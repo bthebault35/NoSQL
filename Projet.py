@@ -1,11 +1,4 @@
-from multiprocessing.connection import Client
-import pymongo
 from pymongo import MongoClient
-from sklearn.neighbors import NeighborhoodComponentsAnalysis
-from sqlalchemy import distinct
-import matplotlib.pyplot as plt
-import os
-from math import sqrt
 from bokeh.plotting import figure, show, output_file
 from bokeh.models import HoverTool,ColumnDataSource,Div, Column,Row
 from bokeh.tile_providers import get_provider, Vendors
@@ -46,13 +39,22 @@ rennes={"type": "Point", "coordinates": [-1.665177375354294, 48.117037996514576]
 date1=datetime.datetime.strptime("2022/01/26", "%Y/%m/%d")
 date2=datetime.datetime.strptime("2022/01/30", "%Y/%m/%d")
 
-#première requete pour récupérer les centres qui ont des créneaux aux dates correspondantes et ne garder que ces créneaux
-creneau_entre_date=coll.find({"location":{"$near": {"$geometry": rennes,"$maxDistance": 50000}},
-                  "visit_motives.slots":{"$gte":date1,"$lt":date2}},{"name":True,"visit_motives":True,"location.coordinates":True})
 
-#2e requete pour récupérer les centres qui n'ont pas de creneaux sur la période
-not_creneau=coll.find({"location":{"$near": {"$geometry": rennes,"$maxDistance": 50000}},
-                  "$nor": [{"visit_motives.slots":{"$gte":date1,"$lt":date2}}]},{"name":True,"visit_motives":True,"location.coordinates":True})
+#Requete pour avoir le nombre de dose par centre entre le 26 et le 29 Janvier (cette requete ne renvoie pas les centres qui n'ont pas fait de doses)
+dose_centre=list(coll.aggregate([
+    {"$geoNear":{"near":rennes,"distanceField":"dist.calculated","maxDistance":50000,"spherical":True}},
+    {"$unwind":"$visit_motives"},
+    {"$unwind":"$visit_motives.slots"},
+    {"$match":{"visit_motives.slots":{"$gte":date1,"$lt":date2}}},
+    {"$group":{"_id":{"id":"$id","name":"$name"},"total":{"$sum":1}}}
+]))
+
+#Requete pour avoir les centre à moins de 50km de Rennes:
+centre_prox_rennes=list(coll.find({
+    "location":{"$near": {"$geometry": rennes,"$maxDistance": 50000}}},
+    {"name":True,"location.coordinates":True}
+))
+
 
 
 
@@ -69,38 +71,31 @@ not_creneau=coll.find({"location":{"$near": {"$geometry": rennes,"$maxDistance":
 #1ere VISU
 #############################################################################################################
 
-coordx,coordy,name,creneau,color,legend=[],[],[],[],[],[]
-for line in creneau_entre_date:
-    nb_creneau=0
-    for motives in line['visit_motives']: #On boucle pour compter le nombre de date qui correspondent aux attentes
-        for date in motives["slots"]:
-            if date>=date1 and date<date2:
-                nb_creneau+=1
-    xy=coor_wgs84_to_web_mercator(line["location"]["coordinates"][0],line["location"]["coordinates"][1])
-    coordx.append(xy[0])
-    coordy.append(xy[1])
-    name.append(line["name"])
-    creneau.append(nb_creneau)
-    if nb_creneau > 100:
-        color.append("green")
-        legend.append("Plus de 100")
-    else:
-        color.append("orange")
-        legend.append("Entre 1 et 100")
+coordx,coordy,name,creneau,color,legend=[],[],[],[],[],[] #Initialisation sous forme de liste pour stocker les information nécessaire à la carte
+for centre in centre_prox_rennes: #Pour chaque centre à moins de 50km de Rennes
+    name_centre=centre["name"]
+    name.append(name_centre)
+    X,Y=coor_wgs84_to_web_mercator(centre["location"]["coordinates"][0],centre["location"]["coordinates"][1])
+    coordx.append(X)
+    coordy.append(Y)
+    nb_dose=0 #nombre de créneaux par défaut
+    color_centre="red" #couleur de point par défaut
+    legend_centre="Aucun" #label de legende par défaut
+    for dose in dose_centre: #On regarde si le centre a des créneaux
+        if dose["_id"]["name"]==name_centre: #Si oui alors on récupère le nombre de créneaux
+            nb_dose=dose["total"]
+            if nb_dose>100: #On stocke une couleur et une légende si plus de 100 créneaux
+                color_centre="green"
+                legend_centre="Plus de 100"
+            else: #On stocke une couleur et une légende si moins de 100 créneaux
+                color_centre = "orange"
+                legend_centre = "Entre 1 et 100"
+            break
+    color.append(color_centre)
+    legend.append(legend_centre)
+    creneau.append(nb_dose)
 
 
-
-for line in not_creneau:
-    xy=coor_wgs84_to_web_mercator(line["location"]["coordinates"][0],line["location"]["coordinates"][1])
-    coordx.append(xy[0])
-    coordy.append(xy[1])
-    name.append(line["name"])
-    creneau.append(0) #ici on n'a que des centres sans créneau correspondant, pas besoin de boucler
-    color.append("red")
-    legend.append("Aucun")
-
-
-print(creneau)
 #Création de la carte
 map = figure(x_axis_type="mercator", y_axis_type="mercator",active_scroll="wheel_zoom", title="Centres de vaccination autour de Rennes, créneaux du 26 au 29 Janvier 2022",toolbar_location=None,width=1000,height=800)
 tile_provider = get_provider(Vendors.CARTODBPOSITRON)
@@ -152,45 +147,43 @@ map.xaxis.axis_line_color = None
 date3=datetime.datetime.strptime("2022/01/01", "%Y/%m/%d")
 date4=datetime.datetime.strptime("2022/06/01", "%Y/%m/%d")
 
-creneau_entre_date=coll.find({"location":{"$near": {"$geometry": rennes,"$maxDistance": 50000}},
-                  "visit_motives.slots":{"$gte":date3,"$lt":date4}},{"name":True,"visit_motives":True,"location.coordinates":True})
+#Requete pour avoir le nombre de premières doses par centre situé à moins de 50kms de Rennes, entre le 1er Janvier et le 1er Juin (cette requete ne renvoie pas les centres qui n'ont pas fait de doses)
+premiere_dose_centre=list(coll.aggregate([
+    {"$geoNear":{"near":rennes,"distanceField":"dist.calculated","maxDistance":50000,"spherical":True}},
+    {"$unwind":"$visit_motives"},
+    {"$unwind":"$visit_motives.slots"},
+    {"$match":{"visit_motives.slots":{"$gte":date3,"$lt":date4}}},
+    {"$match":{"visit_motives.first_shot_motive":True}},
+    {"$group":{"_id":{"id":"$id","name":"$name"},"total":{"$sum":1}}}
+]))
 
-#2e requete pour récupérer les centres qui n'ont pas de creneaux sur la période
-not_creneau=coll.find({"location":{"$near": {"$geometry": rennes,"$maxDistance": 50000}},
-                  "$nor": [{"visit_motives.slots":{"$gte":date3,"$lt":date4}}]},{"name":True,"visit_motives":True,"location.coordinates":True})
+
 
 coordx,coordy,name,creneau,color,legend=[],[],[],[],[],[]
-for line in creneau_entre_date:
-    nb_creneau=0
-    for motives in line['visit_motives']: #On boucle pour compter le nombre de date qui correspondent aux attentes
-        if motives["first_shot_motive"]==True:
-            for date in motives["slots"]:
-                if date>=date3 and date<date4:
-                    nb_creneau+=1
+for centre in centre_prox_rennes:
+    name_centre=centre["name"]
+    name.append(name_centre)
+    X, Y = coor_wgs84_to_web_mercator(centre["location"]["coordinates"][0], centre["location"]["coordinates"][1])
+    coordx.append(X)
+    coordy.append(Y)
+    nb_dose=0
+    color_centre="red"
+    legend_centre="Aucun"
+    for dose in premiere_dose_centre:
+        if dose["_id"]["name"]==name_centre:
+            nb_dose=dose["total"]
+            if nb_dose>100:
+                color_centre="green"
+                legend_centre="Plus de 100"
+            else:
+                color_centre = "orange"
+                legend_centre = "Entre 1 et 100"
+            break
+    color.append(color_centre)
+    legend.append(legend_centre)
+    creneau.append(nb_dose)
 
-    xy=coor_wgs84_to_web_mercator(line["location"]["coordinates"][0],line["location"]["coordinates"][1])
-    coordx.append(xy[0])
-    coordy.append(xy[1])
-    name.append(line["name"])
-    creneau.append(nb_creneau)
-    if nb_creneau > 100:
-        color.append("green")
-        legend.append("Plus de 100")
-    else:
-        color.append("orange")
-        legend.append("Entre 1 et 100")
 
-
-
-
-for line in not_creneau:
-    xy=coor_wgs84_to_web_mercator(line["location"]["coordinates"][0],line["location"]["coordinates"][1])
-    coordx.append(xy[0])
-    coordy.append(xy[1])
-    name.append(line["name"])
-    creneau.append(0) #ici on n'a que des centres sans créneau correspondant, pas besoin de boucler
-    color.append("red")
-    legend.append("Aucun")
 
 #Création de la carte
 map2 = figure(x_axis_type="mercator", y_axis_type="mercator",active_scroll="wheel_zoom", title="Centres de vaccination autour de Rennes, créneaux pour 1ere injection (Janvier à Juin 2022)",toolbar_location=None,width=1000,height=800)
