@@ -1,7 +1,7 @@
 <h1> Visualisation NoSQL </h1>
 <h3> Théo Cavenne et Briac Thébault </h3>
 
-<h3> 1ere visualisation : Centres de vaccination Covid 19 </h3>
+<h3> 1ere visualisation : Centres de vaccination Covid 19 sous Python </h3>
 
 <h4> Contenu : </h4>
 <ul>
@@ -10,3 +10,12 @@
         </ul>
 
 <p>Lien vers la visualisation : <p>
+
+            
+<h3> 2e visualisation : Réseau de publications scientifiques sour R</h3>
+<ul>
+            <li> Visualisation des connexions entre les 20 auteurs les plus actifs du laboratoire IRISA pour l'année 2021</li>    
+</ul>
+<p>Lien vers la visualisation : <p>
+
+<h4> Contenu : </h4>
