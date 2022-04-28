@@ -8,8 +8,8 @@
 </br>
 <h4> Contenu : </h4>
 <ul>
-            <li>-Une carte des centres de vaccinations Covid dans un rayon de 50km autour de Rennes en fonction des créneaux ouverts sur la période du 26 au 29 Janvier 2022</li>
-            <li>-Une carte des centres de vaccinations Covid dans un rayon de 50km autour de Rennes en fonction des créneaux pour première dose ouverts sur la période du 1er Janvier au 1er Juin 2022</li>
+            <li>Une carte des centres de vaccinations Covid dans un rayon de 50km autour de Rennes en fonction des créneaux ouverts sur la période du 26 au 29 Janvier 2022</li>
+            <li>Une carte des centres de vaccinations Covid dans un rayon de 50km autour de Rennes en fonction des créneaux pour première dose ouverts sur la période du 1er Janvier au 1er Juin 2022</li>
         </ul>
     </li>
 <p>Lien vers la visualisation : <p>
