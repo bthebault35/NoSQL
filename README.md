@@ -1,7 +1,7 @@
 <h1> Visualisation NoSQL </h1>
 <h3> Théo Cavenne et Briac Thébault </h3>
 
-<a href="https://github.com/bthebault35/NoSQL/blob/main/visu_covid.html"><h3> 1ere visualisation : Centres de vaccination Covid 19 sous Python </h3> </a>
+<h3><a href="https://github.com/bthebault35/NoSQL/blob/main/visu_covid.html"> 1ere visualisation : Centres de vaccination Covid 19 sous Python  </a></h3>
 
 <h4> Contenu : </h4>
 <ul>
