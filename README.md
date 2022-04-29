@@ -59,7 +59,7 @@
 <ul>
             <li> <a href="/NoSQL/3_visu_nyfood.html" > Visualisation </a> </li>
             <li> <a href="https://github.com/bthebault35/NoSQL/blob/main/3_visu_nyfood.py"> Code source </a></li>
-            <li> <a href="/NoSQL/3_visu_nyfood.p"> Code source (télecharger le fichier) </a></li>
+            <li> <a href="/NoSQL/3_visu_nyfood.py"> Code source (télecharger le fichier) </a></li>
 </ul>
 
 
