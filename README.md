@@ -1,4 +1,4 @@
-<h1> Visualisation NoSQL </h1>
+<h1> Projet de Visualisation de données issues de bases MongoDB </h1>
 <h3> Auteurs : Théo Cavenne et Briac Thébault </h3>
 
 <br/>
@@ -48,11 +48,11 @@
 
 
 
-<h2> 3e visualisation : Restaurants de New York sous python</h2>
+<h2> 3e visualisation : Visualisation des restaurants français de New York sous Python </h2>
 <br/>
 <h4> Contenu : </h4>
 <ul>
-            <li> Carte représentant les restaurants français de New York et de leurs nombres de notes associées.</li>    
+            <li> Carte représentant les restaurants français de New York et leurs notes associées </li>    
 </ul>
 <br/>
 <h4> Liens : </h4>
