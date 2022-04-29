@@ -19,6 +19,11 @@ def coor_wgs84_to_web_mercator(lon, lat):
     x = lon * (k * np.pi/180.0)
     y = np.log(np.tan((90 + lat) * np.pi/360.0)) * k
     return (x,y)
+#######################################################################################
+
+
+
+
 
 #####################CONNEXION A LA BDD##################################################################
 
@@ -32,7 +37,7 @@ coll=db['dump_Jan2022']
 
 
 #######################################################################################
-#REQUETE noSQL
+#REQUETE NoSQL
 ##########################################################################################
 
 rennes={"type": "Point", "coordinates": [-1.665177375354294, 48.117037996514576]}
@@ -54,9 +59,6 @@ centre_prox_rennes=list(coll.find({
     "location":{"$near": {"$geometry": rennes,"$maxDistance": 50000}}},
     {"name":True,"location.coordinates":True}
 ))
-
-
-
 
 
 #############################################################################################################
@@ -288,12 +290,27 @@ texte2=Div(text="""
 </br>
 </br>
 <h2> Carte des centres de vaccination, tout type de visites (du 26 au 29 janvier 2022)</h2>
-<p> Cette carte nous montre que sur les 25 centres de vaccinations situés à moins de 50km de Rennes, plus de la moitié n'ont effectué de vaccination entre le 26 et le 29 Janvier 2022</p>
+<p> Cette carte nous montre que sur les 25 centres de vaccinations situés à moins de 50km de Rennes, plus de la moitié n'ont effectué de vaccination entre le 26 et le 29 Janvier 2022.
+On peut également noter une très forte 'centralisation' plus que près de la moitié des centres de vaccinations sont à Rennes ou en périphérie. 
+Il y a finalement assez peu de centre de 'campagne'. Néanmoins, bon nombre des centres à Rennes sont inactifs et c'est surtout ceux de stade Robert Poirier et du SDIS qui vaccinent.</p>
 </font></body>""")
+
+
+texte3=Div(text="""
+<body>
+<font color="white" size="4" face="Bookman Old Style, Book Antiqua, Garamond">
+</br>
+</br>
+<h2> Carte des centres de vaccination, 1ere dose (du 1er Janvier au 1er Juin 2022)</h2>
+<p> On retrouve une carte similaire à la première bien que le nombre de créneaux est différent. 
+Cela signifie que globalement plus un centre vaccine pour première dose plus il vaccine aussi pour les autres doses.</p>
+</font></body>""")
+
+
 
 layout=(entete)
 layout2=column(map,texte2)
-layout3=map2
+layout3=column(map2,texte3)
 
 #Onglets principaux
 tab1 = Panel(child=layout2, title="Tous types de visites")
@@ -304,5 +321,6 @@ tabs = Tabs(tabs = [tab1, tab2])
 page=column(layout,tabs)
 
 show(page)
+
 
 
