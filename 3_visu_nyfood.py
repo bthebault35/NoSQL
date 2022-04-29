@@ -50,9 +50,15 @@ df_NYfood["y"] = np.log(np.tan((90 + df_NYfood['Latitude']) * np.pi / 360.0)) * 
 
 source = ColumnDataSource(df_NYfood)
 
-p = figure(x_axis_type="mercator", y_axis_type="mercator", active_scroll="wheel_zoom", title="Restaurants")
+p = figure(x_axis_type="mercator", 
+           y_axis_type="mercator", 
+           active_scroll="wheel_zoom", 
+           title="Restaurants")
+
 tile_provider = get_provider(Vendors.CARTODBPOSITRON)
+
 p.add_tile(tile_provider)
+
 p.triangle(x="x",y="y",source=source,size =5)
 
 TOOLTIPS = [
@@ -60,8 +66,13 @@ TOOLTIPS = [
     ('Borough', '@Borough'),
     ('Note', '@Note'),
     ('Nombre de notes', '@Nb_notes')]
+
 hover_tool = HoverTool(tooltips=TOOLTIPS)
+
 p.add_tools(hover_tool)
+
+#output_file("3_visu_nyfood.html")
+
 show(p)
 
 
