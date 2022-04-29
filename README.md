@@ -1,7 +1,7 @@
 <h1> Visualisation NoSQL </h1>
 <h3> Théo Cavenne et Briac Thébault </h3>
 
-<h3><a href="https://github.com/bthebault35/NoSQL/blob/main/visu_covid.html"> 1ere visualisation : Centres de vaccination Covid 19 sous Python  </a></h3>
+<h3><a href="https://github.com/bthebault35/NoSQL/blob/main/1_visu_covid.html"> 1ere visualisation : Centres de vaccination Covid 19 sous Python  </a></h3>
 
 <h4> Contenu : </h4>
 <ul>
@@ -17,6 +17,13 @@
 <ul>
             <li> Visualisation des connexions entre les 20 auteurs les plus actifs du laboratoire IRISA pour l'année 2021</li>    
 </ul>
-<p>Lien vers la visualisation : <p>
+
+
+
+<h3> 3e visualisation : Restaurants de New York sous python</h3>
+<h4> Contenu : </h4>
+<ul>
+            <li> Carte des restaurants de New York et de leurs informations associées </li>    
+</ul>
 
 
