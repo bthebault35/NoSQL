@@ -52,7 +52,7 @@
 <br/>
 <h4> Contenu : </h4>
 <ul>
-            <li> Carte des restaurants de New York et de leurs informations associées </li>    
+            <li> Carte représentant les restaurants français de New York et de leurs nombres de notes associées.</li>    
 </ul>
 <br/>
 <h4> Liens : </h4>
