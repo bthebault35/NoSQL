@@ -38,7 +38,7 @@
 <ul>
             <li> <a href="/NoSQL/2_reseau.html" > Visualisation </a> </li>
             <li> <a href="https://github.com/bthebault35/NoSQL/blob/main/2_reseau.rmd"> Code source </a></li>
-            <li> <a href="/NoSQL/1_visu_covid.py"> Code source (télecharger le fichier) </a></li>
+            <li> <a href="/NoSQL/2_reseau.rmd"> Code source (télecharger le fichier) </a></li>
 </ul>
 
 
