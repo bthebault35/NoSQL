@@ -37,8 +37,8 @@
 <h4> Liens : </h4>
 <ul>
             <li> <a href="/NoSQL/2_reseau.html" > Visualisation </a> </li>
-            <li> <a href="https://github.com/bthebault35/NoSQL/blob/main/2_reseau.rmd"> Code source </a></li>
-            <li> <a href="/NoSQL/2_reseau.rmd"> Code source (télecharger le fichier) </a></li>
+            <li> <a href="https://github.com/bthebault35/NoSQL/blob/main/2_reseau.Rmd"> Code source </a></li>
+            <li> <a href="/NoSQL/2_reseau.Rmd"> Code source (télecharger le fichier) </a></li>
 </ul>
 
 
