@@ -12,7 +12,7 @@
 
 
             
-<h3> 2e visualisation : Réseau de publications scientifiques sous R</h3>
+<h3> <a href="/NoSQL/2_reseau.html"> 2e visualisation : Réseau de publications scientifiques sous R </a></h3>
 <h4> Contenu : </h4>
 <ul>
             <li> Visualisation des connexions entre les 20 auteurs les plus actifs du laboratoire IRISA pour l'année 2021</li>    
