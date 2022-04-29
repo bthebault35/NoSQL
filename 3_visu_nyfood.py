@@ -6,21 +6,19 @@ Created on Fri Apr 29 11:48:00 2022
 """
 
 from pymongo import MongoClient
-from bokeh.plotting import figure, show, output_file
-from bokeh.models import HoverTool,ColumnDataSource, Div, Column, Row, Legend
+from bokeh.plotting import figure, show
+from bokeh.models import HoverTool,ColumnDataSource, Div
 from bokeh.tile_providers import get_provider, Vendors
-from bokeh.models.widgets import Tabs, Panel
-from bokeh.layouts import column, row
-from bokeh.transform import factor_cmap
+from bokeh.layouts import column
 import numpy as np
 import pandas as pd
-import datetime
 from bokeh.io import curdoc
 
-dbURI="mongodb+srv://etudiant:ur2@clusterm1.0rm7t.mongodb.net/"
-client = MongoClient(dbURI)
-db=client['food']
-coll=db['NYfood']
+
+curdoc().theme = 'light_minimal' #thème des graphique
+
+
+###########################DEFINITION DE FONCTION############################################################
 
 #Fonction pour mettre les coordonnées au bon format
 def coor_wgs84_to_web_mercator(lon, lat):
@@ -28,6 +26,28 @@ def coor_wgs84_to_web_mercator(lon, lat):
     x = lon * (k * np.pi/180.0)
     y = np.log(np.tan((90 + lat) * np.pi/360.0)) * k
     return (x,y)
+#######################################################################################
+
+
+
+
+
+
+
+#####################CONNEXION A LA BDD##################################################################
+
+dbURI="mongodb+srv://etudiant:ur2@clusterm1.0rm7t.mongodb.net/"
+client = MongoClient(dbURI)
+db=client['food']
+coll=db['NYfood']
+#######################################################################################
+
+
+
+#######################################################################################
+#Requete NoSQL
+#######################################################################################
+
 
 #Liste des notes associées aux restaurants français de New-York
 list_NYfood=list(coll.aggregate([
@@ -106,12 +126,17 @@ df=pd.DataFrame({'Name':name,
 #Regroupent par restaurant
 newdf=df.groupby(['Name','Borough','Latitude','Longitude','Addresse'],as_index=False).sum()
 
+
+#######################################################################################
 #Création de la carte
+#######################################################################################
+
+
 source=ColumnDataSource(newdf)
 
-p = figure(x_axis_type="mercator", 
-           y_axis_type="mercator", 
-           active_scroll="wheel_zoom", 
+p = figure(x_axis_type="mercator",
+           y_axis_type="mercator",
+           active_scroll="wheel_zoom",
            title="Restaurants français de New-York",
            x_range=(-8245000,-8225000), y_range=(4955000,4995000),
            toolbar_location=None)
@@ -123,9 +148,10 @@ p.add_tile(tile_provider)
 p.scatter(x="Longitude",y="Latitude",source=source,size =5,alpha=0.5)
 
 TOOLTIPS = [
-    ('Name', '@Name'),
-    ('Borough', '@Borough'),
-    ('Adresse', '@Addresse'), 
+    ('Nom', '@Name'),
+    ('Quartier', '@Borough'),
+    ('Adresse', '@Addresse'),
+    ('Notes',''),
     ('A', '@A'),
     ('B', '@B'),
     ('C', '@C'),
@@ -135,18 +161,6 @@ TOOLTIPS = [
 hover_tool = HoverTool(tooltips=TOOLTIPS)
 
 p.add_tools(hover_tool)
-
-p.legend.title = "Nombre de créneaux"
-p.legend.label_text_font = "times"
-p.legend.label_text_font_style = "bold"
-p.legend.label_text_color = "black"
-p.legend.border_line_width = 3
-p.legend.border_line_color = "black"
-p.legend.border_line_alpha = 1
-p.legend.background_fill_color = "white"
-p.legend.background_fill_alpha = 1
-p.legend.click_policy="hide"
-p.legend.location="top_right"
 p.xgrid.grid_line_color = None
 p.ygrid.grid_line_color = None
 p.xaxis.major_label_text_color = None
@@ -158,7 +172,13 @@ p.yaxis.minor_tick_line_color = None
 p.yaxis.axis_line_color = None
 p.xaxis.axis_line_color = None
 
+
+#######################################################################################
 #Mise en page
+#######################################################################################
+
+
+
 entete=Div(text="""
 <style>
 body { 
@@ -201,7 +221,5 @@ texte=Div(text="""
 </font></body>""")
 
 layout=column(entete,p,texte)
-output_file("3_visu_nyfood.html")
 
 show(layout)
-
