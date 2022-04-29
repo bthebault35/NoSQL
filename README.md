@@ -1,9 +1,10 @@
 <h1> Visualisation NoSQL </h1>
-<br/>
 <h3> Auteurs : Théo Cavenne et Briac Thébault </h3>
+
 <br/>
 <br/>
 <br/>
+
 <h2> 1ere visualisation : Centres de vaccination Covid 19 sous Python </h2>
 <br/>
 <h4> Contenu : </h4>
@@ -15,16 +16,14 @@
 <h4> Liens : </h4>
 <ul>
             <li> <a href="/NoSQL/1_visu_covid.html" > Visualisation </a> </li>
-            <li> <a href="https://github.com/bthebault35/NoSQL/blob/main/1_visu_covid.py"> Code source </a></li>
+            <li> <a href="https://github.com/bthebault35/NoSQL/blob/main/1_visu_covid.py"> Code source (Voir sur GitHub) </a></li>
+            <li> <a href="/NoSQL/1_visu_covid.py"> Code source (télecharger le fichier) </a></li>
 </ul>
 
 
 <br/>
 <br/>
 <br/>
-
-
-
 
 
             
@@ -39,6 +38,7 @@
 <ul>
             <li> <a href="/NoSQL/2_reseau.html" > Visualisation </a> </li>
             <li> <a href="https://github.com/bthebault35/NoSQL/blob/main/2_reseau.rmd"> Code source </a></li>
+            <li> <a href="/NoSQL/1_visu_covid.py"> Code source (télecharger le fichier) </a></li>
 </ul>
 
 
