@@ -1,24 +1,22 @@
 ---
-title: "R Notebook"
-output: html_notebook
+title: "Réseau de publications scientifiques"
+output:
+  html_document:
+    df_print: paged
 ---
 
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
-
-
-```{r}
+```{r,include=FALSE}
 library(mongolite)
 library(ggplot2)
 library(dplyr)
 library(visNetwork)
 ```
 
-1 - CONNECTION
 
-```{r}
+
+```{r,include=FALSE}
+#1 - CONNECTION
 
 mdb = mongo(collection="hal_irisa_2021", db="publications",
            url="mongodb+srv://etudiant:ur2@clusterm1.0rm7t.mongodb.net/",
@@ -28,7 +26,8 @@ mdb = mongo(collection="hal_irisa_2021", db="publications",
 
 
 
-```{r}
+```{r,include=FALSE}
+#2-Requête
 #Récupération des 20 auteurs les plus prolifiques
 
 q1='[
@@ -42,13 +41,8 @@ df1 <- mdb$aggregate(pipeline=q1)
 df1$name <- df1$'_id'$Name
 df1$firstname <- df1$'_id'$First_name
 df1 <- df1 %>% select(name, firstname, number)
-df1
-```
 
 
-
-
-```{r}
 #Récupération de la liste des publications de chacun des auteurs
 
 #Initialisation du data frame
@@ -67,7 +61,11 @@ for (i in 1:nrow(df1)){
 
 
 
-```{r}
+
+
+```{r,include=FALSE}
+#3 - Calcul locaux
+
 #Calcul des liens entre auteurs
 
 #Vecteurs qui contiennent pour chaque connexion (publication commune) les noeuds correspondants
@@ -92,11 +90,7 @@ for (i in 1:20){  #Pour chaque auteur
   }
 }
 
-```
-
-
-Création d'une variable groupe qui discrimine par le nombre de publication
-```{r}
+#Création d'une variable groupe qui discrimine par le nombre de publication
 group <- function(ligne){
   if(ligne[3]>=15){
     return("Plus de 15 \n publications ")
@@ -117,8 +111,12 @@ df1$group <- as.factor(apply(df1,MARGIN = 1,group))
 
 
 
-Création du réseau de publications
-```{r}
+
+
+```{r,echo=FALSE}
+#4-Visualisation
+
+#Création du réseau de publications
 nodes <-data_frame(id=1:20,
                    label=df1[,1],
                    group=df1[,4],
@@ -131,12 +129,11 @@ edges <- data.frame(from=link_from,
 
 visNetwork(nodes, edges,
            main = "Réseau de publications scientifiques",
-           submain = "Cliquez sur les noeuds ou les arrêtes pour obtenir les informations correspondantes") %>% 
+           submain = "Passez sur les noeuds ou les arrêtes pour obtenir les informations correspondantes") %>% 
   visLegend(width = 0.1, position = "left", main = "Groupe de \n scientifiques") %>%
   visOptions(highlightNearest = TRUE, nodesIdSelection = TRUE,selectedBy = "group") %>%
   visInteraction(hover=TRUE,hoverConnectedEdges=TRUE)
   
-
 ```
 
 
