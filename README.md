@@ -48,7 +48,7 @@
 
 
 
-<h2> 3e visualisation : Visualisation des restaurants français de New York sous Python </h2>
+<h2> 3e visualisation : Carte des restaurants français de New York sous Python </h2>
 <br/>
 <h4> Contenu : </h4>
 <ul>
