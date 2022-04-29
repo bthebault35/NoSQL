@@ -5,7 +5,6 @@ Created on Fri Apr 29 11:48:00 2022
 @author: theocavenne
 """
 
-
 from pymongo import MongoClient
 from bokeh.plotting import figure, show, output_file
 from bokeh.models import HoverTool,ColumnDataSource, Div, Column, Row, Legend
@@ -114,7 +113,8 @@ p = figure(x_axis_type="mercator",
            y_axis_type="mercator", 
            active_scroll="wheel_zoom", 
            title="Restaurants français de New-York",
-           x_range=(-8245000,-8225000), y_range=(4955000,4995000))
+           x_range=(-8245000,-8225000), y_range=(4955000,4995000),
+           toolbar_location=None)
 
 tile_provider = get_provider(Vendors.CARTODBPOSITRON)
 
@@ -158,7 +158,50 @@ p.yaxis.minor_tick_line_color = None
 p.yaxis.axis_line_color = None
 p.xaxis.axis_line_color = None
 
+#Mise en page
+entete=Div(text="""
+<style>
+body { 
+    background-color: #2A2B2C; 
+    text-align: justify;
+    text-justify:inter-word;
+    }
+.bk-root .bk-tab {
+    background-color: grey;
+    width: 33%;
+    color: white;
+    font-style: italic;
+    font-size: 20px;
+}
+.bk-root .bk-tabs-header .bk-tab.bk-active{
+background-color: white;
+color: #2A2B2C;
+font-style: normal;
+font-weight: bold;
+}
+.bk-root .bk-tabs-header .bk-tab:hover{
+background-color: white;
+color: #2A2B2C;
+}
+</style>
+<body>
+<font color="white" size="4" face="Bookman Old Style, Book Antiqua, Garamond">
+<h2> Carte des restaurants français de New York</h2>
+</br>
+</br>
+</font></body>""")
+
+texte=Div(text="""
+<body>
+<font color="white" size="4" face="Bookman Old Style, Book Antiqua, Garamond">
+</br>
+</br>
+<h2> Carte représentant les restaurants français de New York et leurs notes associées.</h2>
+<p> Cette carte nous montre tout les restaurants de cuisine française ainsi que les notes qui leurs ont été attribuées.</p>
+</font></body>""")
+
+layout=column(entete,p,texte)
 output_file("3_visu_nyfood.html")
 
-show(p)
+show(layout)
 
